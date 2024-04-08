@@ -1,6 +1,15 @@
 import inspect
 
-from django.utils.encoding import force_text, python_2_unicode_compatible
+try:
+    from django.utils.encoding import force_str
+except ImportError:
+    from django.utils.encoding import force_text as force_str
+
+try:
+    from django.utils.encoding import python_2_unicode_compatible
+except ImportError:
+    def python_2_unicode_compatible(f):
+        return f
 
 try:
     from enum import Enum as BaseEnum
@@ -43,10 +52,10 @@ class Enum(EnumMeta('Enum', (BaseEnum,), _EnumDict())):
         """
         Show our label when Django uses the Enum for displaying in a view
         """
-        return force_text(self.label)
+        return force_str(self.label)
 
 
 @python_2_unicode_compatible
 class IntEnum(int, Enum):
     def __str__(self):  # See Enum.__str__
-        return force_text(self.label)
+        return force_str(self.label)

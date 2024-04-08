@@ -3,7 +3,10 @@ from __future__ import absolute_import
 
 from django.forms import TypedChoiceField
 from django.forms.fields import TypedMultipleChoiceField
-from django.utils.encoding import force_text
+try:
+    from django.utils.encoding import force_str
+except ImportError:
+    from django.utils.encoding import force_text as force_str
 
 from .enums import Enum
 
@@ -18,7 +21,7 @@ class EnumChoiceFieldMixin(object):
             return ''
         if hasattr(value, "value"):
             value = value.value
-        return force_text(value)
+        return force_str(value)
 
     def valid_value(self, value):
         if hasattr(value, "value"):  # Try validation using the enum value first.
